@@ -2,39 +2,40 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"os"
 )
 
 type Contact struct {
-	gorm.Model        // provides ID, CreatedAt, UpdatedAt, and DeletedAt
-	First      string `gorm:"size:50"`
-	Last       string `gorm:"size:50"`
-	Phone      string `gorm:"size:50"`
-	Email      string `gorm:"not null"`
+	gorm.Model // provides ID, CreatedAt, UpdatedAt, and DeletedAt
+	First      string
+	Last       string
+	Phone      string
+	Email      string
 }
 
-func main() {
+func dbInit() *gorm.DB {
 	// Get values from environment variables
 	host, hostOk := os.LookupEnv("POSTGRES_HOST")
 	port, portOk := os.LookupEnv("POSTGRES_PORT")
 	user, userOk := os.LookupEnv("POSTGRES_USER")
 	password, passwordOk := os.LookupEnv("POSTGRES_PASSWORD")
-	dbname, dbnameOk := os.LookupEnv("POSTGRES_DB")
-	sslmode, sslmodeOk := os.LookupEnv("POSTGRES_SSLMODE")
+	dbName, dbNameOk := os.LookupEnv("POSTGRES_DB")
+	sslMode, sslModeOk := os.LookupEnv("POSTGRES_SSLMODE")
 
 	// Basic validation (add more as needed)
-	if !hostOk || !portOk || !userOk || !passwordOk || !dbnameOk || !sslmodeOk {
+	if !hostOk || !portOk || !userOk || !passwordOk || !dbNameOk || !sslModeOk {
 		log.Fatal("Missing required DB environment variables")
 	}
 
 	// Build DSN dynamically
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		host, port, user, password, dbname, sslmode)
+		host, port, user, password, dbName, sslMode)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -46,10 +47,13 @@ func main() {
 	// Auto-migrate the User model
 	db.AutoMigrate(&Contact{})
 
+	return db
+}
+
+func main() {
+	db := dbInit()
 	engine := html.New("./views", ".html")
-
 	app := fiber.New(fiber.Config{Views: engine})
-
 	app.Static("/", "./public")
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -57,25 +61,26 @@ func main() {
 	})
 
 	app.Get("/contacts", func(c *fiber.Ctx) error {
-		// dummy data
-		contacts := []map[string]string{
-			{"first": "Alan", "last": "Adams", "phone": "321-555-1598", "email": "aadams@xyz.com"},
-			{"first": "Bob", "last": "Bryant", "phone": "321-555-1745", "email": "bbryant@xyz.com"},
-			{"first": "Chuck", "last": "Connors", "phone": "321-555-1652", "email": "cconnors@xyz.com"},
-			{"first": "Dave", "last": "Denver", "phone": "321-555-1598", "email": "ddenver@xyz.com"},
-		}
-
-		contacts_searched := []map[string]string{
-			{"first": "Alan", "last": "Adams", "phone": "321-555-1598", "email": "aadams@xyz.com"},
-		}
-
+		var contacts []Contact
 		search := c.Query("q")
+
 		if search != "" {
-			// implement database function here to search?
-			return c.Render("index", fiber.Map{"Contacts": contacts_searched})
+			search = "%" + search + "%"
+			if err := db.Where(
+				db.Where("first ILIKE ?", search).
+					Or("last ILIKE ?", search).
+					Or("email ILIKE ?", search).
+					Or("phone ILIKE ?", search),
+			).Find(&contacts).Error; err != nil {
+				return c.Status(500).SendString("Database error")
+			}
 		} else {
-			return c.Render("index", fiber.Map{"Contacts": contacts})
+			if err := db.Find(&contacts).Error; err != nil {
+				return c.Status(500).SendString("Database error")
+			}
 		}
+
+		return c.Render("index", fiber.Map{"Contacts": contacts})
 	})
 
 	// EXAMPLE - Route to create a new user

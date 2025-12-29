@@ -10,6 +10,33 @@
 
 <body>
     <h1>Hello, live loading in docker!</h1>
+
+    <form action="/contacts" method="get">
+        <label for="search">Search Term</label>
+        <input id="search" type="search" name="q" value="" />
+        <input type="submit" value="Search" />
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>First</th>
+                <th>Last</th>
+                <th>Phone</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Contacts}}
+            <tr>
+                <td>{{.First}}</th>
+                <td>{{.Last}}</td>
+                <td>{{.Phone}}</td>
+                <td>{{.Email}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
 </body>
 
 </html>

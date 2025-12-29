@@ -34,9 +34,6 @@ services:
       - database
     networks:
       - app-network
-    # Development helpers
-    stdin_open: true
-    tty: true
 
   admin:
     build:
@@ -44,8 +41,6 @@ services:
       dockerfile: Dockerfile
     container_name: admin-dev
     restart: unless-stopped
-    environment:
-      - ADMINER_DEFAULT_SERVER=database
     expose:
       - "8080"
     depends_on:
