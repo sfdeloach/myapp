@@ -1,0 +1,17 @@
+FROM golang:1.25.5
+
+WORKDIR /server
+
+# Air Live Reloading
+RUN go install github.com/air-verse/air@latest
+
+# Copy go.mod and go.sum first for better layer caching
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Now copy the source code
+COPY . .
+
+EXPOSE 3000
+
+CMD ["/go/bin/air", "-c", ".air.linux.conf"]
