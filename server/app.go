@@ -62,10 +62,11 @@ func main() {
 
 	app.Get("/contacts", func(c *fiber.Ctx) error {
 		var contacts []Contact
-		search := c.Query("q")
+		var search string
+		queryParam := c.Query("q")
 
-		if search != "" {
-			search = "%" + search + "%"
+		if queryParam != "" {
+			search = "%" + queryParam + "%"
 			if err := db.Where(
 				db.Where("first ILIKE ?", search).
 					Or("last ILIKE ?", search).
@@ -80,7 +81,9 @@ func main() {
 			}
 		}
 
-		return c.Render("index", fiber.Map{"Contacts": contacts})
+		return c.Render("index",
+			fiber.Map{"Contacts": contacts, "QueryParam": queryParam},
+			"layouts/main")
 	})
 
 	// EXAMPLE - Route to create a new user
