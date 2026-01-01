@@ -13,6 +13,7 @@ services:
       - app-network
 
   server:
+    image: sfdeloach/myapp-server-dev:latest
     build:
       context: ./server
       dockerfile: Dockerfile.dev
@@ -25,6 +26,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - AUTO_SEED=true # Set to false to skip seeding
     volumes:
       - ./server:/server # Mount source code for live reloading
       - go-modules:/go/pkg/mod # Cache Go modules
@@ -36,9 +38,10 @@ services:
       - app-network
 
   admin:
+    image: sfdeloach/myapp-admin-dev:latest
     build:
       context: ./admin
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: admin-dev
     restart: unless-stopped
     expose:
@@ -49,9 +52,10 @@ services:
       - app-network
 
   web:
+    image: sfdeloach/myapp-web-dev:latest
     build:
       context: ./web
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: web-dev
     restart: unless-stopped
     ports:

@@ -1,58 +1,40 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+
+	"server/database"
+	"server/helpers"
+	"server/models"
 )
 
-type Contact struct {
-	gorm.Model // provides ID, CreatedAt, UpdatedAt, and DeletedAt
-	First      string
-	Last       string
-	Phone      string
-	Email      string
-}
-
-func dbInit() *gorm.DB {
-	// Get values from environment variables
-	host, hostOk := os.LookupEnv("POSTGRES_HOST")
-	port, portOk := os.LookupEnv("POSTGRES_PORT")
-	user, userOk := os.LookupEnv("POSTGRES_USER")
-	password, passwordOk := os.LookupEnv("POSTGRES_PASSWORD")
-	dbName, dbNameOk := os.LookupEnv("POSTGRES_DB")
-	sslMode, sslModeOk := os.LookupEnv("POSTGRES_SSLMODE")
-
-	// Basic validation (add more as needed)
-	if !hostOk || !portOk || !userOk || !passwordOk || !dbNameOk || !sslModeOk {
-		log.Fatal("Missing required DB environment variables")
-	}
-
-	// Build DSN dynamically
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		host, port, user, password, dbName, sslMode)
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("Successful database connection")
-	}
-
-	// Auto-migrate the User model
-	db.AutoMigrate(&Contact{})
-
-	return db
-}
-
 func main() {
-	db := dbInit()
+	// Define CLI flags
+	seedFlag := flag.Bool("seed", false, "Seed the database with test data")
+	flag.Parse()
+
+	// Initialize database
+	db := database.Init()
+
+	// Run seeder if flag is set
+	if *seedFlag {
+		if err := database.Seed(db); err != nil {
+			log.Fatalf("Failed to seed database: %v", err)
+		}
+		log.Println("Database seeded successfully!")
+		os.Exit(0)
+	}
+
 	engine := html.New("./views", ".html")
+
+	// Register custom template function
+	engine.AddFunc("formatPhone", helpers.FormatPhone)
+
 	app := fiber.New(fiber.Config{Views: engine})
 	app.Static("/", "./public")
 
@@ -61,28 +43,21 @@ func main() {
 	})
 
 	app.Get("/contacts", func(c *fiber.Ctx) error {
-		var contacts []Contact
-		var search string
-		queryParam := c.Query("q")
+		var contacts []models.Contact
+		query := db.Model(&models.Contact{})
 
-		if queryParam != "" {
-			search = "%" + queryParam + "%"
-			if err := db.Where(
-				db.Where("first ILIKE ?", search).
-					Or("last ILIKE ?", search).
-					Or("email ILIKE ?", search).
-					Or("phone ILIKE ?", search),
-			).Find(&contacts).Error; err != nil {
-				return c.Status(500).SendString("Database error")
-			}
-		} else {
-			if err := db.Find(&contacts).Error; err != nil {
-				return c.Status(500).SendString("Database error")
-			}
+		if q := c.Query("q"); q != "" {
+			search := "%" + q + "%"
+			query = query.Where("first ILIKE ? OR last ILIKE ? OR email ILIKE ? OR phone ILIKE ? OR CONCAT(first, ' ', last) ILIKE ?",
+				search, search, search, search, search)
+		}
+
+		if err := query.Find(&contacts).Error; err != nil {
+			return c.Status(500).SendString("Database error")
 		}
 
 		return c.Render("index",
-			fiber.Map{"Contacts": contacts, "QueryParam": queryParam},
+			fiber.Map{"Contacts": contacts, "QueryParam": c.Query("q")},
 			"layouts/main")
 	})
 

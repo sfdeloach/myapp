@@ -9,9 +9,12 @@ RUN go install github.com/air-verse/air@latest
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Now copy the source code
+# Copy entrypoint script and make it executable
+COPY --chmod=755 dev-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
+
+# Copy the rest of the source code (done last to maximize cache efficiency)
 COPY . .
 
 EXPOSE 3000
 
-CMD ["/go/bin/air", "-c", ".air.linux.conf"]
+CMD ["/usr/local/bin/dev-entrypoint.sh"]

@@ -13,6 +13,7 @@ services:
       - app-network
 
   server:
+    image: sfdeloach/myapp-server:latest
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -33,11 +34,12 @@ services:
       - app-network
 
   web:
+    image: sfdeloach/myapp-web:latest
     build:
       context: ./web
       dockerfile: Dockerfile
     container_name: web
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
