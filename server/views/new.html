@@ -1,27 +1,27 @@
 {{template "partials/header" .}}
 
-<main class="flex-grow">
-    <form class="container" action="/contacts/new" method="post">
-        <legend>Contact Values</legend>
-        <p class="group">
-            <label for="first">First Name</label>
-            <input class="input" class="form-input" id="first" type="text" name="first" />
-            <span class="error-message">{{.Contact.error}}</span>
-        </p>
-        <p class="group">
-            <label for="last">Last Name</label>
-            <input class="input" class="form-input" id="last" type="text" name="last" />
-        </p>
-        <p class="group">
-            <label for="phone">Phone</label>
-            <input class="input" class="form-input" id="phone" type="tel" name="phone" />
-        </p>
-        <p class="group">
-            <label for="email">Email</label>
-            <input class="input" class="form-input" id="email" type="email" name="email" />
-        </p>
-        <button class="btn btn--primary" type="submit">Submit</button>
-    </form>
+<main>
+  <form action="/contacts/new" method="post">
+    <legend>Contact Values</legend>
+    <p>
+      <label for="first">First Name</label>
+      <input id="first" type="text" name="first" />
+      <span>{{.Contact.error}}</span>
+    </p>
+    <p>
+      <label for="last">Last Name</label>
+      <input id="last" type="text" name="last" />
+    </p>
+    <p>
+      <label for="phone">Phone</label>
+      <input id="phone" type="tel" name="phone" />
+    </p>
+    <p>
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" />
+    </p>
+    <button type="submit">Submit</button>
+  </form>
 </main>
 
 {{template "partials/footer" .}}

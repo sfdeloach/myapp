@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e # exit immediately if any command returns an error (non-zero)
 
 # Optional: Only seed if AUTO_SEED environment variable is set (defaults to true)
 AUTO_SEED=${AUTO_SEED:-true}

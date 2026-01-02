@@ -1,39 +1,40 @@
 {{template "partials/header" .}}
 
-<main class="flex-grow">
-    <form class="container" action="/contacts" method="get">
-        <label for="search">Search Term</label>
-        <input class="input" class="form-input" id="search" type="search" name="q" value="{{.QueryParam}}" />
-        <button class="btn btn--primary" type="submit">Search</button>
-    </form>
+<main>
+  <form action="/contacts" method="get">
+    <label for="search">Search Term</label>
+    <input id="search" type="search" name="q" value="{{.QueryParam}}" />
+    <button type="submit">Search</button>
+  </form>
 
-    <table class="container">
-        <thead>
-            <tr>
-                <th>First</th>
-                <th>Last</th>
-                <th>Phone</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{range .Contacts}}
-            <tr>
-                <td>{{.First}}</th>
-                <td>{{.Last}}</td>
-                <td>{{formatPhone .Phone}}</td>
-                <td>{{.Email}}</td>
-                <td>
-                    <a class="btn btn--secondary" href="/contacts/{{.ID}}/edit">edit</a>
-                    <a class="btn btn--secondary" href="/contacts/{{.ID}}">view</a>
-                </td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
-    <p>
-        <a class="btn btn--primary" href="/contacts/new">Add Contact</a>
-    </p>
+  <table>
+    <thead>
+      <tr>
+        <th>First</th>
+        <th>Last</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Contacts}}
+      <tr>
+        <td>{{.First}}</td>
+        <td>{{.Last}}</td>
+        <td>{{formatPhone .Phone}}</td>
+        <td>{{.Email}}</td>
+        <td>
+          <a href="/contacts/{{.ID}}/edit">edit</a>
+          <a href="/contacts/{{.ID}}">view</a>
+        </td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+  <p>
+    <a href="/contacts/new">Add Contact</a>
+  </p>
 </main>
 
 {{template "partials/footer" .}}
