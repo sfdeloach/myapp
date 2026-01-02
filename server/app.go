@@ -61,6 +61,10 @@ func main() {
 			"layouts/main")
 	})
 
+	app.Get("/contacts/new", func(c *fiber.Ctx) error {
+		return c.Render("new", nil, "layouts/main")
+	})
+
 	// EXAMPLE - Route to create a new user
 	// app.Post("/users", func(c *fiber.Ctx) error {
 	// 	user := new(User)

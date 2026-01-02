@@ -1,32 +1,39 @@
 {{template "partials/header" .}}
 
-<h1>Hello, myapp!</h1>
+<main class="flex-grow">
+    <form class="container" action="/contacts" method="get">
+        <label for="search">Search Term</label>
+        <input class="input" class="form-input" id="search" type="search" name="q" value="{{.QueryParam}}" />
+        <button class="btn btn--primary" type="submit">Search</button>
+    </form>
 
-<form action="/contacts" method="get">
-    <label for="search">Search Term</label>
-    <input id="search" type="search" name="q" value="{{.QueryParam}}" />
-    <input type="submit" value="Search" />
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>First</th>
-            <th>Last</th>
-            <th>Phone</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{range .Contacts}}
-        <tr>
-            <td>{{.First}}</th>
-            <td>{{.Last}}</td>
-            <td>{{formatPhone .Phone}}</td>
-            <td>{{.Email}}</td>
-        </tr>
-        {{end}}
-    </tbody>
-</table>
+    <table class="container">
+        <thead>
+            <tr>
+                <th>First</th>
+                <th>Last</th>
+                <th>Phone</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Contacts}}
+            <tr>
+                <td>{{.First}}</th>
+                <td>{{.Last}}</td>
+                <td>{{formatPhone .Phone}}</td>
+                <td>{{.Email}}</td>
+                <td>
+                    <a class="btn btn--secondary" href="/contacts/{{.ID}}/edit">edit</a>
+                    <a class="btn btn--secondary" href="/contacts/{{.ID}}">view</a>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <p>
+        <a class="btn btn--primary" href="/contacts/new">Add Contact</a>
+    </p>
+</main>
 
 {{template "partials/footer" .}}
