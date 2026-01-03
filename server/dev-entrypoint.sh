@@ -6,7 +6,7 @@ AUTO_SEED=${AUTO_SEED:-true}
 
 if [ "$AUTO_SEED" = "true" ]; then
     echo "Running database seeder..."
-    go run app.go --seed
+    go run main.go --seed
 else
     echo "Skipping database seeding (AUTO_SEED=$AUTO_SEED)"
 fi

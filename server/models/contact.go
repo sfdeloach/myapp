@@ -7,5 +7,5 @@ type Contact struct {
 	First      string `gorm:"type:varchar(100);not null"`
 	Last       string `gorm:"type:varchar(100);not null"`
 	Phone      string `gorm:"type:varchar(12)"`
-	Email      string `gorm:"type:varchar(255);uniqueIndex"`
+	Email      string `gorm:"type:varchar(255)"`
 }

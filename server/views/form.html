@@ -1,0 +1,63 @@
+<main class="main-container">
+  <form action="{{.FormAction}}" method="post">
+    <fieldset>
+      <legend>{{if eq .View "edit"}}Edit{{else}}Add{{end}} Contact</legend>
+      <p>
+        <label for="first">First Name</label>
+        <input
+          id="first"
+          type="text"
+          name="first"
+          autocomplete="off"
+          value="{{.Contact.First}}"
+        />
+      </p>
+      <p>
+        <label for="last">Last Name</label>
+        <input
+          id="last"
+          type="text"
+          name="last"
+          autocomplete="off"
+          value="{{.Contact.Last}}"
+        />
+      </p>
+      <p>
+        <label for="phone">Phone</label>
+        <input
+          id="phone"
+          type="tel"
+          name="phone"
+          autocomplete="off"
+          value="{{.Contact.Phone}}"
+        />
+      </p>
+      <p>
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          autocomplete="off"
+          value="{{.Contact.Email}}"
+        />
+      </p>
+      <div class="row-container">
+        <button type="submit">
+          {{if eq .View "edit"}}Update{{else}}Save{{end}}
+        </button>
+        {{if .Error}}
+        <span class="error-message">Unable to update: {{.Error}}</span>
+        {{end}}
+        <a href="/contacts">Back to contacts</a>
+      </div>
+    </fieldset>
+  </form>
+  {{if eq .View "edit"}}
+  <form action="/contacts/{{.Contact.ID}}/delete" method="post">
+    <div class="row-container">
+      <button class="danger" type="submit">Delete</button>
+    </div>
+  </form>
+  {{end}}
+</main>

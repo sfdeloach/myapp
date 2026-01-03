@@ -40,13 +40,13 @@
 :root {
   /* Colors */
   --color-header: #2464eb88;
-  --color-footer: #d84e1888;
+  --color-footer: #14378388;
   --color-primary: #2563eb;
-  --color-secondary: #7c3aed;
+  --color-secondary: #4478e9;
   --color-accent: #f59e0b;
   --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-warning: #b13838;
+  --color-error: #922121;
 
   /* Neutrals */
   --color-text: #1f2937;
@@ -367,6 +367,14 @@ button:disabled {
   transform: none;
 }
 
+button.danger {
+  background-color: var(--color-error);
+}
+
+button.danger:hover {
+  background-color: var(--color-warning);
+}
+
 /* Tables */
 table {
   width: 100%;
@@ -410,7 +418,7 @@ img {
 .row-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   gap: var(--spacing-md);
 }

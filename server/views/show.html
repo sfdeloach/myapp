@@ -1,0 +1,14 @@
+<main class="main-container">
+  <div class="row-container">
+    <a href="/contacts/{{.Contact.ID}}/edit">Edit contact</a>
+    {{if .Flash}}
+    <span class="success-message">{{.Flash}}</span>
+    {{end}}
+    <a href="/contacts">Back to contacts</a>
+  </div>
+  <h1>{{.Contact.First}} {{.Contact.Last}}</h1>
+  <h2>Phone:</h2>
+  <h3>{{formatPhone .Contact.Phone}}</h3>
+  <h2>Email:</h2>
+  <h3>{{.Contact.Email}}</h3>
+</main>
