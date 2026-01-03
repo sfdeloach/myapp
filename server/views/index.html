@@ -1,9 +1,11 @@
 {{template "partials/header" .}}
 
-<main>
-  <form action="/contacts" method="get">
-    <label for="search">Search Term</label>
-    <input id="search" type="search" name="q" value="{{.QueryParam}}" />
+<main class="container">
+  <form class="mb-xl" action="/contacts" method="get">
+    <p>
+      <label for="search">Search Term</label>
+      <input id="search" type="search" name="q" value="{{.QueryParam}}" />
+    </p>
     <button type="submit">Search</button>
   </form>
 

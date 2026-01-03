@@ -1,8 +1,8 @@
 {{template "partials/header" .}}
 
-<main>
-  <form action="/contacts/new" method="post">
-    <legend>Contact Values</legend>
+<main class="container">
+  <form class="mb-xl" action="/contacts/new" method="post">
+    <legend>New Contact</legend>
     <p>
       <label for="first">First Name</label>
       <input id="first" type="text" name="first" />
@@ -22,6 +22,9 @@
     </p>
     <button type="submit">Submit</button>
   </form>
+  <p>
+    <a href="/contacts">Back to contacts</a>
+  </p>
 </main>
 
 {{template "partials/footer" .}}
