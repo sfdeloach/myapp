@@ -1,12 +1,18 @@
 {{template "partials/header" .}}
 
-<main class="container">
-  <form class="mb-xl" action="/contacts" method="get">
+<main class="main-container">
+  <form action="/contacts" method="get">
     <p>
       <label for="search">Search Term</label>
       <input id="search" type="search" name="q" value="{{.QueryParam}}" />
     </p>
-    <button type="submit">Search</button>
+    <div class="row-container">
+      <button type="submit">Search</button>
+      {{if .Flash}}
+      <span class="success-message">{{.Flash}}</span>
+      {{end}}
+      <a href="/contacts/new">Add Contact</a>
+    </div>
   </form>
 
   <table>
@@ -34,9 +40,6 @@
       {{end}}
     </tbody>
   </table>
-  <p>
-    <a href="/contacts/new">Add Contact</a>
-  </p>
 </main>
 
 {{template "partials/footer" .}}

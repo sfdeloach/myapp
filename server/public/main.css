@@ -39,8 +39,8 @@
 /* Root variables for easy customization */
 :root {
   /* Colors */
-  --color-header: rgba(8, 26, 86, 0.2);
-  --color-footer: rgba(204, 204, 204, 0.2);
+  --color-header: #2464eb88;
+  --color-footer: #d84e1888;
   --color-primary: #2563eb;
   --color-secondary: #7c3aed;
   --color-accent: #f59e0b;
@@ -110,15 +110,15 @@
   --transition-slow: 350ms ease-in-out;
 
   /* Container */
-  --container-max-width: 1000px;
+  --container-max-width: 1024px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     /* Neutrals */
-    --color-text: #c1bfdb;
+    --color-text: #d2d0e5;
     --color-text-light: #9a99af;
-    --color-background: #424253;
+    --color-background: #2b2b30;
     --color-surface: #5e5e6d;
     --color-border: #5e5e6d;
   }
@@ -162,7 +162,6 @@ footer p {
 header {
   background-color: var(--color-header);
   min-height: var(--spacing-4xl);
-  margin-bottom: var(--spacing-2xl);
 }
 
 footer {
@@ -277,6 +276,12 @@ li {
 }
 
 /* Forms */
+fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+}
+
 input,
 textarea,
 select,
@@ -366,7 +371,6 @@ button:disabled {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: var(--spacing-md);
 }
 
 th,
@@ -393,15 +397,33 @@ img {
   display: block;
 }
 
-/* Container */
-.container {
+/* Containers */
+.main-container {
   width: 100%;
+  margin: var(--spacing-xl) auto;
   max-width: var(--container-max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--spacing-lg);
+}
+
+.row-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 /* Utility classes */
+span.error-message {
+  color: var(--color-error);
+}
+
+span.success-message {
+  color: var(--color-success);
+}
+
 .hidden {
   display: none;
 }

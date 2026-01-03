@@ -18,7 +18,7 @@
 
 #### tasks
 
-- store [session information](https://docs.gofiber.io/api/middleware/session) from `server` service
+- store [session information](https://docs.gofiber.io/api/middleware/session) from `server` service, like flash messages and user login state
 - [messaging (pub/sub)](https://redis.io/docs/latest/develop/pubsub/) between `server` and `function` services
 
 ### database
