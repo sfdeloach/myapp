@@ -1,5 +1,9 @@
 FROM golang:1.25.5 AS build
 
+# Build arguments for multi-architecture support
+ARG TARGETOS
+ARG TARGETARCH
+
 WORKDIR /server
 
 # Copy go.mod and go.sum first for better layer caching
@@ -9,9 +13,9 @@ RUN go mod download
 # Now copy the source code
 COPY . .
 
-# Builds the application as a statically linked binary,
-# to allow it to run on alpine
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o app .
+# Builds the application as a statically linked binary, to allow it to run on alpine
+# TARGETOS and TARGETARCH are automatically set by Docker BuildKit
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -a -installsuffix cgo -o app .
 
 
 FROM alpine:3.23.2
