@@ -53,11 +53,18 @@
       </div>
     </fieldset>
   </form>
-  {{if eq .View "edit"}}
-  <form action="/contacts/{{.Contact.ID}}/delete" method="post">
-    <div class="row-container">
-      <button class="danger" type="submit">Delete</button>
-    </div>
-  </form>
-  {{end}}
+  <div class="row-container">
+    {{if eq .View "edit"}}
+    <button
+      class="danger"
+      type="button"
+      hx-delete="/contacts/{{.Contact.ID}}"
+      hx-target="body"
+      hx-push-url="true"
+      hx-confirm="Are you sure you want to delete {{.Contact.First}} {{.Contact.Last}}?"
+    >
+      Delete
+    </button>
+    {{end}}
+  </div>
 </main>

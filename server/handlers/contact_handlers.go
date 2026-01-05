@@ -209,5 +209,6 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Redirect("/contacts")
+	// Set status to override DELETE request to /contacts
+	return c.Redirect("/contacts", fiber.StatusSeeOther)
 }
