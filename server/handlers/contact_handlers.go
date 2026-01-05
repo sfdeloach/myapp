@@ -72,7 +72,7 @@ func (h *ContactHandler) Create(c *fiber.Ctx) error {
 
 	// Validate and sanitize data
 	if err := helpers.ValidateContact(contact); err != nil {
-		return c.Status(422).Render("form", fiber.Map{
+		return c.Render("form", fiber.Map{
 			"Contact":    contact,
 			"FormAction": "/contacts/new",
 			"View":       "new",
@@ -157,7 +157,7 @@ func (h *ContactHandler) Update(c *fiber.Ctx) error {
 
 	// Validate and sanitize data
 	if err := helpers.ValidateContact(contact); err != nil {
-		return c.Status(422).Render("form", fiber.Map{
+		return c.Render("form", fiber.Map{
 			"Contact":    contact,
 			"FormAction": fmt.Sprintf("/contacts/%d/edit", contact.ID),
 			"View":       "edit",
