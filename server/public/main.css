@@ -494,6 +494,32 @@ span.success-message {
   margin-top: var(--spacing-xl);
 }
 
+.ml-sm {
+  margin-left: var(--spacing-sm);
+}
+.ml-md {
+  margin-left: var(--spacing-md);
+}
+.ml-lg {
+  margin-left: var(--spacing-lg);
+}
+.ml-xl {
+  margin-left: var(--spacing-xl);
+}
+
+.mr-sm {
+  margin-right: var(--spacing-sm);
+}
+.mr-md {
+  margin-right: var(--spacing-md);
+}
+.mr-lg {
+  margin-right: var(--spacing-lg);
+}
+.mr-xl {
+  margin-right: var(--spacing-xl);
+}
+
 .mb-sm {
   margin-bottom: var(--spacing-sm);
 }

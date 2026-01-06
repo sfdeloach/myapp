@@ -26,6 +26,9 @@ func Setup(app *fiber.App, db *gorm.DB, store *session.Store) {
 	app.Post("/contacts/:contactID/edit", contactHandler.Update)
 	app.Delete("/contacts/:contactID/", contactHandler.Delete)
 
+	// Special route
+	app.Get("/contacts/:contactID/email", contactHandler.Email)
+
 	// 404 handler - must be last
 	app.Use(func(c *fiber.Ctx) error {
 		return c.Status(404).Render("not-found", nil, "layouts/main")

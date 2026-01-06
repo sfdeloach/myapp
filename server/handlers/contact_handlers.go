@@ -71,7 +71,7 @@ func (h *ContactHandler) Create(c *fiber.Ctx) error {
 	}
 
 	// Validate and sanitize data
-	if err := helpers.ValidateContact(contact); err != nil {
+	if err := helpers.ValidateContact(contact, h.DB); err != nil {
 		return c.Render("form", fiber.Map{
 			"Contact":    contact,
 			"FormAction": "/contacts/new",
@@ -156,7 +156,7 @@ func (h *ContactHandler) Update(c *fiber.Ctx) error {
 	contact.ID = uint(id)
 
 	// Validate and sanitize data
-	if err := helpers.ValidateContact(contact); err != nil {
+	if err := helpers.ValidateContact(contact, h.DB); err != nil {
 		return c.Render("form", fiber.Map{
 			"Contact":    contact,
 			"FormAction": fmt.Sprintf("/contacts/%d/edit", contact.ID),
@@ -194,7 +194,7 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 
 	// Delete contact from database by ID
 	if err := h.DB.Delete(&models.Contact{}, uint(id)).Error; err != nil {
-		return c.Status(500).SendString("Failed to delete contact. Please try again.")
+		return c.Status(500).SendString("Failed to delete contact.")
 	}
 
 	// Get session
@@ -203,7 +203,7 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 		return err
 	}
 
-	// Set flash message
+	// Set and save the flash message to the session
 	sess.Set("flash_success", "Contact deleted.")
 	if err := sess.Save(); err != nil {
 		return err
@@ -211,4 +211,9 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 
 	// Set status to override DELETE request to /contacts
 	return c.Redirect("/contacts", fiber.StatusSeeOther)
+}
+
+func (h *ContactHandler) Email(c *fiber.Ctx) error {
+	// TODO: call email validator function
+	return c.SendString("hello from contact_handlers.go -- error message goes here")
 }
