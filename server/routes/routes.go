@@ -26,8 +26,8 @@ func Setup(app *fiber.App, db *gorm.DB, store *session.Store) {
 	app.Post("/contacts/:contactID/edit", contactHandler.Update)
 	app.Delete("/contacts/:contactID/", contactHandler.Delete)
 
-	// Special route
-	app.Get("/contacts/:contactID/email", contactHandler.Email)
+	// Form validation routes
+	app.Get("/contacts/:contactID/validate/email", contactHandler.ValidateEmail)
 
 	// 404 handler - must be last
 	app.Use(func(c *fiber.Ctx) error {

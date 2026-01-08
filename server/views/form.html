@@ -33,14 +33,12 @@
         />
       </p>
       <p>
-        <label for="email"
-          >Email
-          <span class="error-message ml-lg"
-            >Attention: This needs to be converted to a dynamic template</span
-          ></label
-        >
+        <label for="email">
+          <span>Email</span>
+          <span class="error-message ml-lg"></span>
+        </label>
         <input
-          hx-get="/contacts/{{.Contact.ID}}/email"
+          hx-get="/contacts/{{.Contact.ID}}/validate/email"
           hx-target="previous span.error-message"
           id="email"
           type="email"

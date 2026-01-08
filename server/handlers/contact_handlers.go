@@ -213,7 +213,22 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 	return c.Redirect("/contacts", fiber.StatusSeeOther)
 }
 
-func (h *ContactHandler) Email(c *fiber.Ctx) error {
-	// TODO: call email validator function
-	return c.SendString("hello from contact_handlers.go -- error message goes here")
+func (h *ContactHandler) ValidateEmail(c *fiber.Ctx) error {
+	email := c.Query("email")
+
+	// Parse contact ID from URL parameter (0 for new contacts)
+	var contactID uint
+	if idParam := c.Params("contactID"); idParam != "" {
+		id, err := strconv.ParseUint(idParam, 10, 32)
+		if err != nil {
+			return c.Status(400).SendString("Invalid contact ID")
+		}
+		contactID = uint(id)
+	}
+
+	if err := helpers.ValidateEmail(email, h.DB, contactID); err != nil {
+		return c.SendString(err.Error())
+	}
+
+	return c.SendString("")
 }
