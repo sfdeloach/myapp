@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -17,56 +18,17 @@ func Seed(db *gorm.DB) error {
 		return err
 	}
 
-	// Sample contacts for testing
-	contacts := []models.Contact{
-		{
-			First: "John",
-			Last:  "Doe",
-			Phone: "5551234567",
-			Email: "john.doe@example.com",
-		},
-		{
-			First: "Jane",
-			Last:  "Smith",
-			Phone: "5559876543",
-			Email: "jane.smith@example.com",
-		},
-		{
-			First: "Bob",
-			Last:  "Johnson",
-			Phone: "15551112222",
-			Email: "bob.johnson@example.com",
-		},
-		{
-			First: "Alice",
-			Last:  "Williams",
-			Phone: "5554445555",
-			Email: "alice.williams@example.com",
-		},
-		{
-			First: "Charlie",
-			Last:  "Brown",
-			Phone: "5556667777",
-			Email: "charlie.brown@example.com",
-		},
-		{
-			First: "Diana",
-			Last:  "Davis",
-			Phone: "5558889999",
-			Email: "diana.davis@example.com",
-		},
-		{
-			First: "Eve",
-			Last:  "Martinez",
-			Phone: "5552223333",
-			Email: "eve.martinez@example.com",
-		},
-		{
-			First: "Frank",
-			Last:  "Garcia",
-			Phone: "15557778888",
-			Email: "frank.garcia@example.com",
-		},
+	// Generate sample contacts for testing
+	numContacts := 8192
+	contacts := make([]models.Contact, numContacts)
+
+	for i := range numContacts {
+		contacts[i] = models.Contact{
+			First: fmt.Sprintf("FirstName%d", i+1),
+			Last:  fmt.Sprintf("LastName%d", i+1),
+			Phone: fmt.Sprintf("555%07d", i+1),
+			Email: fmt.Sprintf("user%d@example.com", i+1),
+		}
 	}
 
 	// Insert contacts

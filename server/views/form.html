@@ -40,6 +40,7 @@
         <input
           hx-get="/contacts/{{.Contact.ID}}/validate/email"
           hx-target="previous span.error-message"
+          hx-trigger="change, keyup delay:500ms changed"
           id="email"
           type="email"
           name="email"
