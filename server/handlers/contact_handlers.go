@@ -48,12 +48,36 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 			search, search, search, search, search)
 	}
 
-	if err := query.Find(&contacts).Error; err != nil {
+	// Get total count for pagination (respects search filters)
+	var totalCount int64
+	if err := query.Count(&totalCount).Error; err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	// Determine offset from page number
+	const ITEMS_PER_PAGE int = 10
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * ITEMS_PER_PAGE
+
+	// Calculate total pages
+	totalPages := int((totalCount + int64(ITEMS_PER_PAGE) - 1) / int64(ITEMS_PER_PAGE))
+
+	// Fetch contacts with pagination and consistent ordering
+	if err := query.Order("id ASC").Limit(ITEMS_PER_PAGE).Offset(offset).Find(&contacts).Error; err != nil {
 		return c.Status(500).SendString(err.Error())
 	}
 
 	return c.Render("index",
-		fiber.Map{"Contacts": contacts, "QueryParam": c.Query("q"), "Flash": flashMessage},
+		fiber.Map{
+			"Contacts":   contacts,
+			"SearchTerm": c.Query("q"),
+			"Flash":      flashMessage,
+			"Page":       page,
+			"TotalPages": totalPages,
+		},
 		"layouts/main")
 }
 
