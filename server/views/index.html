@@ -38,4 +38,17 @@
       {{end}}
     </tbody>
   </table>
+  <div class="row-container">
+    <a
+      href="/contacts?q={{.SearchTerm}}&page={{getPage .Page .TotalPages `prev`}}"
+    >
+      Previous
+    </a>
+    <span>Page {{.Page}} of {{.TotalPages}}</span>
+    <a
+      href="/contacts?q={{.SearchTerm}}&page={{getPage .Page .TotalPages `next`}}"
+    >
+      Next
+    </a>
+  </div>
 </main>

@@ -53,7 +53,9 @@
           {{if eq .View "edit"}}Update{{else}}Save{{end}}
         </button>
         {{if .Error}}
-        <span class="error-message">Unable to update: {{.Error}}</span>
+        <span class="error-message">
+          Unable to {{if eq .View "edit"}}update{{else}}save{{end}}: {{.Error}}
+        </span>
         {{end}}
         <a href="/contacts">Back to contacts</a>
       </div>

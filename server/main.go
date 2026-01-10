@@ -33,9 +33,10 @@ func main() {
 
 	// Html template engine for views
 	engine := html.New("./views", ".html")
-	
+
 	// Register custom template function(s)
 	engine.AddFunc("formatPhone", helpers.FormatPhone)
+	engine.AddFunc("getPage", helpers.GetPage)
 
 	// Set template engine
 	app := fiber.New(fiber.Config{Views: engine})

@@ -82,7 +82,10 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 }
 
 func (h *ContactHandler) New(c *fiber.Ctx) error {
+	var contact models.Contact
+
 	return c.Render("form", fiber.Map{
+		"Contact":    contact,
 		"FormAction": "/contacts/new",
 		"View":       "new"}, "layouts/main")
 }
@@ -239,6 +242,7 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 
 func (h *ContactHandler) ValidateEmail(c *fiber.Ctx) error {
 	email := c.Query("email")
+	fmt.Print("email: ", email)
 
 	// Parse contact ID from URL parameter (0 for new contacts)
 	var contactID uint
