@@ -39,15 +39,21 @@
       <tr>
         <td colspan="3">Displaying {{.Count}} of {{.TotalCount}} records</td>
         <td colspan="2">
-          <button
+          {{if .HasMore}}
+          <span
             hx-get="/contacts?page={{loadMore .Page}}&q={{.SearchTerm}}"
-            hx-select="tbody tr"
+            hx-select="tbody > tr"
             hx-swap="outerHTML"
             hx-target="closest tr"
-            {{if .HasNoMore}}disabled{{end}}
+            hx-trigger="revealed"
+            {{if
+            .HasNoMore}}disabled{{end}}
           >
-            Load more
-          </button>
+            Loading more...
+          </span>
+          {{else}}
+          <span>All records displayed</span>
+          {{end}}
         </td>
       </tr>
     </tbody>

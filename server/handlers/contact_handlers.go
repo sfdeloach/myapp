@@ -84,7 +84,7 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 			"Page":       page,
 			"Count":      offset + len(contacts),
 			"TotalCount": totalRows,
-			"HasNoMore":    (offset + len(contacts)) >= int(totalRows),
+			"HasMore":    (offset + len(contacts)) < int(totalRows),
 		},
 		"layouts/main")
 }
