@@ -36,7 +36,7 @@ func main() {
 
 	// Register custom template function(s)
 	engine.AddFunc("formatPhone", helpers.FormatPhone)
-	engine.AddFunc("getPage", helpers.GetPage)
+	engine.AddFunc("loadMore", helpers.LoadMore)
 
 	// Set template engine
 	app := fiber.New(fiber.Config{Views: engine})

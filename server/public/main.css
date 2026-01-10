@@ -398,6 +398,14 @@ tr:hover {
   background-color: var(--color-surface);
 }
 
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:last-child:hover {
+  background-color: transparent;
+}
+
 /* Images */
 img {
   max-width: 100%;

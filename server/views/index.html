@@ -36,19 +36,20 @@
         </td>
       </tr>
       {{end}}
+      <tr>
+        <td colspan="3">Displaying {{.Count}} of {{.TotalCount}} records</td>
+        <td colspan="2">
+          <button
+            hx-get="/contacts?page={{loadMore .Page}}&q={{.SearchTerm}}"
+            hx-select="tbody tr"
+            hx-swap="outerHTML"
+            hx-target="closest tr"
+            {{if .HasNoMore}}disabled{{end}}
+          >
+            Load more
+          </button>
+        </td>
+      </tr>
     </tbody>
   </table>
-  <div class="row-container">
-    <a
-      href="/contacts?q={{.SearchTerm}}&page={{getPage .Page .TotalPages `prev`}}"
-    >
-      Previous
-    </a>
-    <span>Page {{.Page}} of {{.TotalPages}}</span>
-    <a
-      href="/contacts?q={{.SearchTerm}}&page={{getPage .Page .TotalPages `next`}}"
-    >
-      Next
-    </a>
-  </div>
 </main>

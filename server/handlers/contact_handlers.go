@@ -12,6 +12,8 @@ import (
 	"server/models"
 )
 
+const ItemsPerPage int = 25
+
 type ContactHandler struct {
 	DB    *gorm.DB
 	Store *session.Store
@@ -35,7 +37,9 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 	// Delete the flash if it exists
 	if flashMessage != nil {
 		sess.Delete("flash_success")
-		sess.Save()
+		if err := sess.Save(); err != nil {
+			return err
+		}
 	}
 
 	var contacts []models.Contact
@@ -48,26 +52,28 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 			search, search, search, search, search)
 	}
 
-	// Get total count for pagination (respects search filters)
-	var totalCount int64
-	if err := query.Count(&totalCount).Error; err != nil {
-		return c.Status(500).SendString(err.Error())
+	// Get total count of all rows (respects search filters)
+	var totalRows int64
+	if err := query.Count(&totalRows).Error; err != nil {
+		return c.Status(500).SendString("Failed to retrieve contact count")
 	}
 
 	// Determine offset from page number
-	const ITEMS_PER_PAGE int = 10
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil || page < 1 {
 		page = 1
 	}
-	offset := (page - 1) * ITEMS_PER_PAGE
+	offset := (page - 1) * ItemsPerPage
 
-	// Calculate total pages
-	totalPages := int((totalCount + int64(ITEMS_PER_PAGE) - 1) / int64(ITEMS_PER_PAGE))
+	// Maximum page validation
+	maxPage := int((totalRows + int64(ItemsPerPage) - 1) / int64(ItemsPerPage))
+	if page > maxPage && maxPage > 0 {
+		page = maxPage
+	}
 
-	// Fetch contacts with pagination and consistent ordering
-	if err := query.Order("id ASC").Limit(ITEMS_PER_PAGE).Offset(offset).Find(&contacts).Error; err != nil {
-		return c.Status(500).SendString(err.Error())
+	// Fetch contacts
+	if err := query.Order("id ASC").Limit(ItemsPerPage).Offset(offset).Find(&contacts).Error; err != nil {
+		return c.Status(500).SendString("Failed to retrieve contacts")
 	}
 
 	return c.Render("index",
@@ -76,7 +82,9 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 			"SearchTerm": c.Query("q"),
 			"Flash":      flashMessage,
 			"Page":       page,
-			"TotalPages": totalPages,
+			"Count":      offset + len(contacts),
+			"TotalCount": totalRows,
+			"HasNoMore":    (offset + len(contacts)) >= int(totalRows),
 		},
 		"layouts/main")
 }
