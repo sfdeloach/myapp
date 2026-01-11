@@ -1,12 +1,17 @@
 <main class="main-container">
   <form action="/contacts" method="get">
     <p>
-      <label for="search">Search Term</label>
+      <span style="display: flex; gap: 2rem">
+        <label for="search">Search Term</label>
+        <em id="indicator" class="htmx-indicator">Searching...</em>
+      </span>
       <input
         hx-get="/contacts"
+        hx-indicator="#indicator"
+        hx-push-url="true"
+        hx-select="tbody > tr"
         hx-target="tbody"
         hx-trigger="search, keyup delay:500ms changed"
-        hx-select="tbody > tr"
         id="search"
         type="search"
         name="q"
@@ -32,39 +37,6 @@
         <th></th>
       </tr>
     </thead>
-    <tbody>
-      {{range .Contacts}}
-      <tr>
-        <td>{{.First}}</td>
-        <td>{{.Last}}</td>
-        <td>{{formatPhone .Phone}}</td>
-        <td>{{.Email}}</td>
-        <td>
-          <a href="/contacts/{{.ID}}/edit">edit</a>
-          <a href="/contacts/{{.ID}}">view</a>
-        </td>
-      </tr>
-      {{end}}
-      <tr>
-        <td colspan="3">Displaying {{.Count}} of {{.TotalCount}} records</td>
-        <td colspan="2">
-          {{if .HasMore}}
-          <span
-            hx-get="/contacts?page={{loadMore .Page}}&q={{.SearchTerm}}"
-            hx-select="tbody > tr"
-            hx-swap="outerHTML"
-            hx-target="closest tr"
-            hx-trigger="revealed"
-            {{if
-            .HasNoMore}}disabled{{end}}
-          >
-            Loading more...
-          </span>
-          {{else}}
-          <span>All records displayed</span>
-          {{end}}
-        </td>
-      </tr>
-    </tbody>
+    {{template "partials/rows" .}}
   </table>
 </main>

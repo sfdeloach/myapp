@@ -51,11 +51,6 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 		search := "%" + q + "%"
 		query = query.Where("first ILIKE ? OR last ILIKE ? OR email ILIKE ? OR phone ILIKE ? OR CONCAT(first, ' ', last) ILIKE ?",
 			search, search, search, search, search)
-		// Determine if the request came from "active search"
-		if c.Get("HX-Trigger") == "search" {
-			// TODO: render only the rows here
-			// TODO: refactor template partials and layouts
-		}
 	}
 
 	// Get total count of all rows (respects search filters)
@@ -82,7 +77,15 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Failed to retrieve contacts")
 	}
 
-	return c.Render("index",
+	// Determine if the request came from "active search"
+	templateName := "index"
+	templateLayout := "layouts/main"
+	if c.Get("HX-Trigger") == "search" {
+		templateName = "partials/rows"
+		templateLayout = "" // no template used with partials
+	}
+
+	return c.Render(templateName,
 		fiber.Map{
 			"Contacts":   contacts,
 			"SearchTerm": c.Query("q"),
@@ -92,7 +95,8 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 			"TotalCount": totalRows,
 			"HasMore":    (offset + len(contacts)) < int(totalRows),
 		},
-		"layouts/main")
+		templateLayout)
+
 }
 
 func (h *ContactHandler) New(c *fiber.Ctx) error {
