@@ -27,6 +27,7 @@ func NewContactHandler(db *gorm.DB, store *session.Store) *ContactHandler {
 }
 
 func (h *ContactHandler) Index(c *fiber.Ctx) error {
+
 	// Get session and flash message if available
 	sess, err := h.Store.Get(c)
 	if err != nil {
@@ -50,6 +51,11 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 		search := "%" + q + "%"
 		query = query.Where("first ILIKE ? OR last ILIKE ? OR email ILIKE ? OR phone ILIKE ? OR CONCAT(first, ' ', last) ILIKE ?",
 			search, search, search, search, search)
+		// Determine if the request came from "active search"
+		if c.Get("HX-Trigger") == "search" {
+			// TODO: render only the rows here
+			// TODO: refactor template partials and layouts
+		}
 	}
 
 	// Get total count of all rows (respects search filters)

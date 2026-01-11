@@ -2,7 +2,16 @@
   <form action="/contacts" method="get">
     <p>
       <label for="search">Search Term</label>
-      <input id="search" type="search" name="q" value="{{.SearchTerm}}" />
+      <input
+        hx-get="/contacts"
+        hx-target="tbody"
+        hx-trigger="search, keyup delay:500ms changed"
+        hx-select="tbody > tr"
+        id="search"
+        type="search"
+        name="q"
+        value="{{.SearchTerm}}"
+      />
     </p>
     <div class="row-container">
       <button type="submit">Search</button>
