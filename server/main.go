@@ -37,6 +37,7 @@ func main() {
 	// Register custom template function(s)
 	engine.AddFunc("formatPhone", helpers.FormatPhone)
 	engine.AddFunc("loadMore", helpers.LoadMore)
+	engine.AddFunc("commas", helpers.Commas)
 
 	// Set template engine
 	app := fiber.New(fiber.Config{Views: engine})

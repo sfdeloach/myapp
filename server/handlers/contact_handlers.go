@@ -278,3 +278,16 @@ func (h *ContactHandler) ValidateEmail(c *fiber.Ctx) error {
 
 	return c.SendString("")
 }
+
+func (h *ContactHandler) ContactsCount(c *fiber.Ctx) error {
+	query := h.DB.Model(&models.Contact{})
+
+	// Get total count of all rows (respects search filters)
+	var totalRows int64
+	if err := query.Count(&totalRows).Error; err != nil {
+		return c.Status(500).SendString("Failed to retrieve contact count")
+	}
+
+	return c.Render("partials/totalContacts",
+		fiber.Map{"TotalContacts": fmt.Sprintf("%d", totalRows)})
+}

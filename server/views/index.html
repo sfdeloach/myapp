@@ -23,7 +23,12 @@
       {{if .Flash}}
       <span class="success-message">{{.Flash}}</span>
       {{end}}
-      <a href="/contacts/new">Add Contact</a>
+      <a href="/contacts/new"
+        >Add Contact
+        <span hx-get="/contacts/count" hx-trigger="revealed"
+          ><span class="htmx-indicator">Loading...</span></span
+        ></a
+      >
     </div>
   </form>
 

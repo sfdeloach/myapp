@@ -19,6 +19,7 @@ func Setup(app *fiber.App, db *gorm.DB, store *session.Store) {
 
 	// Contact routes
 	app.Get("/contacts", contactHandler.Index)
+	app.Get("/contacts/count", contactHandler.ContactsCount) // expensive operations receive their own route
 	app.Get("/contacts/new", contactHandler.New)
 	app.Post("/contacts/new", contactHandler.Create)
 	app.Get("/contacts/:contactID", contactHandler.Show)
