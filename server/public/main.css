@@ -105,9 +105,9 @@
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Transitions */
-  --transition-fast: 150ms ease-in-out;
-  --transition-base: 250ms ease-in-out;
-  --transition-slow: 350ms ease-in-out;
+  --transition-fast: 250ms ease-in-out;
+  --transition-base: 500ms ease-in-out;
+  --transition-slow: 1000ms ease-in-out;
 
   /* Container */
   --container-max-width: 1024px;
@@ -404,6 +404,11 @@ tr:last-child td {
 
 tr:last-child:hover {
   background-color: transparent;
+}
+
+tr.htmx-swapping td{
+  opacity: 0;
+  transition: opacity 800ms ease-out;
 }
 
 /* Images */

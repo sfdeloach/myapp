@@ -25,7 +25,7 @@ func Setup(app *fiber.App, db *gorm.DB, store *session.Store) {
 	app.Get("/contacts/:contactID", contactHandler.Show)
 	app.Get("/contacts/:contactID/edit", contactHandler.Edit)
 	app.Post("/contacts/:contactID/edit", contactHandler.Update)
-	app.Delete("/contacts/:contactID/", contactHandler.Delete)
+	app.Delete("/contacts/:contactID", contactHandler.Delete)
 
 	// Form validation routes
 	app.Get("/contacts/:contactID/validate/email", contactHandler.ValidateEmail)

@@ -242,20 +242,25 @@ func (h *ContactHandler) Delete(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Failed to delete contact.")
 	}
 
-	// Get session
-	sess, err := h.Store.Get(c)
-	if err != nil {
-		return err
+	if c.Get("Hx-Trigger") == "form-delete-button" {
+		// Get session
+		sess, err := h.Store.Get(c)
+		if err != nil {
+			return err
+		}
+
+		// Set and save the flash message to the session
+		sess.Set("flash_success", "Contact deleted.")
+		if err := sess.Save(); err != nil {
+			return err
+		}
+
+		// Set status to override default DELETE request to /contacts
+		return c.Redirect("/contacts", fiber.StatusSeeOther)
 	}
 
-	// Set and save the flash message to the session
-	sess.Set("flash_success", "Contact deleted.")
-	if err := sess.Save(); err != nil {
-		return err
-	}
-
-	// Set status to override DELETE request to /contacts
-	return c.Redirect("/contacts", fiber.StatusSeeOther)
+	// Delete initiated from index view
+	return c.SendString("")
 }
 
 func (h *ContactHandler) ValidateEmail(c *fiber.Ctx) error {

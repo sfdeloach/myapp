@@ -4,49 +4,24 @@
       <legend>{{if eq .View "edit"}}Edit{{else}}Add{{end}} Contact</legend>
       <p>
         <label for="first">First Name</label>
-        <input
-          id="first"
-          type="text"
-          name="first"
-          autocomplete="off"
-          value="{{.Contact.First}}"
-        />
+        <input id="first" type="text" name="first" autocomplete="off" value="{{.Contact.First}}" />
       </p>
       <p>
         <label for="last">Last Name</label>
-        <input
-          id="last"
-          type="text"
-          name="last"
-          autocomplete="off"
-          value="{{.Contact.Last}}"
-        />
+        <input id="last" type="text" name="last" autocomplete="off" value="{{.Contact.Last}}" />
       </p>
       <p>
         <label for="phone">Phone</label>
-        <input
-          id="phone"
-          type="tel"
-          name="phone"
-          autocomplete="off"
-          value="{{.Contact.Phone}}"
-        />
+        <input id="phone" type="tel" name="phone" autocomplete="off" value="{{.Contact.Phone}}" />
       </p>
       <p>
         <label for="email">
           <span>Email</span>
           <span class="error-message ml-lg"></span>
         </label>
-        <input
-          hx-get="/contacts/{{.Contact.ID}}/validate/email"
-          hx-target="previous span.error-message"
-          hx-trigger="change, keyup delay:500ms changed"
-          id="email"
-          type="email"
-          name="email"
-          autocomplete="off"
-          value="{{.Contact.Email}}"
-        />
+        <input hx-get="/contacts/{{.Contact.ID}}/validate/email" hx-target="previous span.error-message"
+          hx-trigger="change, keyup delay:500ms changed" id="email" type="email" name="email" autocomplete="off"
+          value="{{.Contact.Email}}" />
       </p>
       <div class="row-container">
         <button type="submit">
@@ -63,14 +38,8 @@
   </form>
   <div class="row-container">
     {{if eq .View "edit"}}
-    <button
-      class="danger"
-      type="button"
-      hx-delete="/contacts/{{.Contact.ID}}"
-      hx-target="body"
-      hx-push-url="true"
-      hx-confirm="Are you sure you want to delete {{.Contact.First}} {{.Contact.Last}}?"
-    >
+    <button id="form-delete-button" class="danger" type="button" hx-delete="/contacts/{{.Contact.ID}}" hx-target="body"
+      hx-push-url="true" hx-confirm="Are you sure you want to delete {{.Contact.First}} {{.Contact.Last}}?">
       Delete
     </button>
     {{end}}
