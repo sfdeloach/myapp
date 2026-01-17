@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -97,6 +98,49 @@ func (h *ContactHandler) Index(c *fiber.Ctx) error {
 		},
 		templateLayout)
 
+}
+
+func (h *ContactHandler) BulkDelete(c *fiber.Ctx) error {
+	// Get all values for "contact_ids" query parameter
+	// Handles URLs like: ?contact_ids=1&contact_ids=2&contact_ids=3
+	contactIDBytes := c.Context().QueryArgs().PeekMulti("contact_ids")
+
+	if len(contactIDBytes) == 0 {
+		return c.Status(400).SendString("No contact IDs provided")
+	}
+
+	// Parse all IDs upfront to validate before any deletion
+	ids := make([]uint, 0, len(contactIDBytes))
+	for _, idBytes := range contactIDBytes {
+		id, err := strconv.ParseUint(string(idBytes), 10, 32)
+		if err != nil {
+			return c.Status(400).SendString("Invalid contact ID")
+		}
+		ids = append(ids, uint(id))
+	}
+
+	// Delete all contacts in a single query
+	if err := h.DB.Delete(&models.Contact{}, ids).Error; err != nil {
+		return c.Status(500).SendString("Failed to delete contacts.")
+	}
+
+	// Copy query params from Hx-Current-Url to the request context
+	// so that Index handler can access them (e.g., search term, page)
+	if currentURL := c.Get("Hx-Current-Url"); currentURL != "" {
+		c.Set("HX-Push-Url", currentURL)
+
+		if parsed, err := url.Parse(currentURL); err == nil {
+			// Copy each query param to the request's query args
+			for key, values := range parsed.Query() {
+				for _, value := range values {
+					c.Context().QueryArgs().Set(key, value)
+				}
+			}
+		}
+	}
+
+	// Render the contacts list directly instead of redirecting
+	return h.Index(c)
 }
 
 func (h *ContactHandler) New(c *fiber.Ctx) error {
