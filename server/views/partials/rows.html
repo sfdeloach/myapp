@@ -1,0 +1,30 @@
+<tbody>
+  {{range .Contacts}}
+  <tr>
+    <td><input type="checkbox" name="contact_ids" value="{{.ID}}" /></td>
+    <td>{{.First}}</td>
+    <td>{{.Last}}</td>
+    <td>{{formatPhone .Phone}}</td>
+    <td>{{.Email}}</td>
+    <td>
+      <a href="/contacts/{{.ID}}/edit">edit</a>
+      <a href="/contacts/{{.ID}}">view</a>
+      <a href="#" hx-delete="/contacts/{{.ID}}" hx-confirm="Are you sure you want to delete {{.First}} {{.Last}}?"
+        hx-target="closest tr" hx-swap="outerHTML swap:800ms">delete</a>
+    </td>
+  </tr>
+  {{end}}
+  <tr>
+    <td colspan="3">Displaying {{.Count}} of {{.TotalCount}} records</td>
+    <td colspan="2">
+      {{if .HasMore}}
+      <span hx-get="/contacts?page={{loadMore .Page}}&q={{.SearchTerm}}" hx-select="tbody > tr" hx-swap="outerHTML"
+        hx-target="closest tr" hx-trigger="revealed" {{if .HasNoMore}}disabled{{end}}>
+        Loading more...
+      </span>
+      {{else}}
+      <span>All records displayed</span>
+      {{end}}
+    </td>
+  </tr>
+</tbody>
