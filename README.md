@@ -4,7 +4,7 @@ Web application full-stack production demonstration using Docker containers.
 
 ## Service Overview
 
-[*insert network map here*]
+![network map](./myapp-overview.png)
 
 ### ADMIN
 
@@ -13,15 +13,6 @@ Web application full-stack production demonstration using Docker containers.
 #### tasks
 
 - postgres `database` service administration
-
-### CACHE
-
-[**Image:**](https://hub.docker.com/_/redis) `redis:8.4.0-bookworm`
-
-#### tasks
-
-- store [session information](https://docs.gofiber.io/api/middleware/session) from `server` service, like flash messages and user login state
-- [messaging (pub/sub)](https://redis.io/docs/latest/develop/pubsub/) between `server` and `function` services
 
 ### DATABASE
 
@@ -40,7 +31,6 @@ Web application full-stack production demonstration using Docker containers.
 - [Fiber](https://gofiber.io/) Go web framework based on Fasthttp
 - [html/template](https://pkg.go.dev/html/template) Go standard library html templating engine
 - [htmx](https://htmx.org/) extends HTML with AJAX, CSS transitions and more from the server
-- [Alpine.js](https://alpinejs.dev/) interactive behavior on the client
 - Vanilla CSS
 
 #### alternatives

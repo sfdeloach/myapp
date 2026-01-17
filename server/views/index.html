@@ -5,30 +5,16 @@
         <label for="search">Search Term</label>
         <em id="indicator" class="htmx-indicator">Searching...</em>
       </span>
-      <input
-        hx-get="/contacts"
-        hx-indicator="#indicator"
-        hx-push-url="true"
-        hx-select="tbody > tr"
-        hx-target="tbody"
-        hx-trigger="search, keyup delay:500ms changed"
-        id="search"
-        type="search"
-        name="q"
-        value="{{.SearchTerm}}"
-      />
+      <input hx-get="/contacts" hx-indicator="#indicator" hx-push-url="true" hx-select="tbody > tr" hx-target="tbody"
+        hx-trigger="search, keyup delay:500ms changed" id="search" type="search" name="q" value="{{.SearchTerm}}" />
     </p>
     <div class="row-container">
       <button type="submit">Search</button>
       {{if .Flash}}
       <span class="success-message">{{.Flash}}</span>
       {{end}}
-      <a href="/contacts/new"
-        >Add Contact
-        <span hx-get="/contacts/count" hx-trigger="revealed"
-          ><span class="htmx-indicator">Loading...</span></span
-        ></a
-      >
+      <a href="/contacts/new">Add Contact
+        <span hx-get="/contacts/count" hx-trigger="revealed"><span class="htmx-indicator">Loading...</span></span></a>
     </div>
   </form>
 
@@ -46,12 +32,8 @@
       </thead>
       {{template "partials/rows" .}}
     </table>
-    <button
-      class="danger"
-      hx-delete="/contacts"
-      hx-target="body"
-      hx-confirm="Are you sure you want to delete the selected contacts?"
-    >
+    <button class="danger" hx-delete="/contacts" hx-target="body"
+      hx-confirm="Are you sure you want to delete the selected contacts?">
       Delete Selected Contacts
     </button>
   </form>

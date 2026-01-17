@@ -2,4 +2,5 @@
 ./tmp
 /server/application
 /server/server
+/server/tmp
 *.pem
